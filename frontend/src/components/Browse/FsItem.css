@@ -1,0 +1,83 @@
+.filesystem-item {
+    border-top: 1px solid var(--border);
+}
+
+.filesystem-item td {
+    /* padding: 0.5rem; */
+}
+
+.browse-icon-link {
+    padding: 0.5rem 0.25rem;
+    
+}
+
+.browse-name-link {
+    padding: 0.75rem 0.25rem 0.75rem 0;
+}
+
+.active.filesystem-item {
+    background: rgba(238, 116, 177, 0.4);
+}
+
+.name {
+    padding-right: 1rem;
+    min-width: 28rem;
+}
+
+.size {
+    color: #999;
+    font-size: 14px;
+    margin-top:2px;
+}
+
+.mod-time {
+    color: #999;
+    font-size: 14px;
+    margin-top:2px;
+
+    margin-left: 1rem;
+}
+
+.item-link {
+    display: flex;
+}
+
+/* .item:hover {
+    outline: 1px dashed hotpink;
+} */
+
+.fs-item-icon-wrapper {
+    position: relative;
+
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    
+    /* min-width: 2rem; */
+    margin-top:3px;
+}
+
+.hidden {
+    opacity: 0.4;
+}
+
+.system-icon {
+    position: absolute;
+    font-size: 0.5rem;
+    bottom: 0;
+    right: 0.5rem;
+    opacity: 0.5;
+}
+
+.live-link {
+    /* transition: 0.2s ease-in-out; */
+}
+
+.live-link:hover {
+    text-decoration: underline;
+}
+
+.tiny-icon {
+    color: #e8e8e8 !important;
+    font-size: 90%;
+}

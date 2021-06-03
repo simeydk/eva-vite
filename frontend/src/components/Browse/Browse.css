@@ -1,0 +1,46 @@
+* {
+    font-family: "Inter", "Segoe UI";
+}
+
+.browse-area {
+    background: #F0F0F4;
+    min-width: 480px;
+    height: 100vh;
+    overflow-y: scroll;
+}
+
+.results-list {
+    padding: 0.25rem;
+}
+
+.browse-results-area {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.browse-table-wrapper {
+    --border: #F0F0E0;
+    border-radius: 0.5rem;
+    border: 1px solid var(--border);
+    width: 100%;
+    overflow:hidden;
+    max-width: 1400px;
+}
+
+.browse-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+}
+
+.browse-table th {
+    border-bottom: 1px solid var(--border);
+    padding: 0.5rem;
+    font-size: 14px;
+    color: #333;
+    background: #F8F8F8;
+    text-align: left;
+}
+  

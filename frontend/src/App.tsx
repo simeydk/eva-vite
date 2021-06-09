@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
-import filesize from 'filesize';
+import * as HeroIconsOutLine from '@heroicons/react/outline';
 import { cachedFetch } from "./utils/cachedFetch";
-import { formatDate } from "./utils/formatDate";
+import { ResultItem } from "./ResultItem";
+
 
 
 const API = '/api'
 
+export const openExternal = (path: string) => fetch(`${API}/open?path=${path}`)
 
 function useResults(query: string, initialResults = []) {
     const [items, setItems] = useState(initialResults)
@@ -29,15 +31,13 @@ function App() {
     const [query, setQuery] = useState('')
     const results = useResults(query)
     return (
-        <div className="min-h-screen bg-gray-100 flex flex-col gap-4 relative">
+        <div className="h-screen bg-gray-100 flex flex-col gap-4 relative overflow-y-scroll">
             <div className="absolute inset-0 h-96 bg-gradient-to-br from-cyan-400 to-emerald-400 z-0 shadow-sm transform skew-y-2 -translate-y-12" />
             <div className="relative z-1">
 
                 <SearchBar query={query} setQuery={setQuery} />
-                {query}
 
                 <div className="flex items-start p-4 gap-4 w-full max-w-screen-xl mx-auto">
-                    <FilterSideBar />
                     <ResultsList results={results} />
                 </div>
             </div>
@@ -56,52 +56,7 @@ function ResultsList({ results }) {
         <div className="rounded-md bg-white shadow overflow-x-auto">
             <table className="table-auto w-full">
                 <tbody className="divide-y">
-                    {results.map(result => (
-                        <tr className="hover:bg-blue-50">
-                            <td className="p-5 pr-2 w-10">
-                                <div className="flex items-center justify-center h-8 w-8 rounded-md ring-blue-500 ring-offset-2 ring-offset-gray-100 bg-gradient-to-br to-blue-400 from-cyan-400">
-                                    <div className="text-xs text-cyan-200">
-                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                            <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm3 2h6v4H7V5zm8 8v2h1v-2h-1zm-2-2H7v4h6v-4zm2 0h1V9h-1v2zm1-4V5h-1v2h1zM5 5v2H4V5h1zm0 4H4v2h1V9zm-1 4h1v2H4v-2z" clipRule="evenodd" />
-                                        </svg>
-                                    </div>
-                                </div>
-                            </td>
-                            <td className="p-2">
-                                <p className="text-gray-900 font-medium truncate">{result.name}</p>
-                                <div className="flex gap-1">
-                                    <div className="flex-shrink-0 text-blue-300 -mt-px w-4 h-4">
-                                    <svg xmlns="http://www.w3.org/2000/svg" className="" viewBox="0 0 20 20" fill="currentColor">
-                                                <path d="M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" />
-                                            </svg>
-                                    </div>
-                                    <p className="text-gray-600 text-sm leading-none">{result.path}</p>
-                                </div>
-                            </td>
-                            <td className="p-2 max-w-2">
-                                <p className="text-gray-900 truncate text-sm">{filesize(result.size_bytes)}</p>
-                                <p className="text-gray-900 truncate text-sm">{formatDate(new Date(result.modified_time))}</p>
-                            </td>
-                            <td className="p-4 pr-5">
-                                <div className="flex border rounded text-gray-300 bg-gray-50 overflow-hidden divide-x w-max">
-                                    <button className="p-2 flex-grow-0 hover:text-green-700 hover:bg-green-200">
-                                        <div className="w-4 h-4">
-                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                                <path d="M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" />
-                                            </svg>
-                                        </div>
-                                    </button>
-                                    <button className="p-2 flex-grow-0 hover:text-blue-700 hover:bg-blue-200">
-                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                            <path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" />
-                                            <path d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-
-                    ))}
+                    {results.map(result => <ResultItem result={result} />)}
                 </tbody>
             </table>
         </div>
@@ -185,9 +140,9 @@ function FilterSideBar() {
     </div>;
 }
 
-function SearchBar({ query, setQuery }): ReactNode {
+function SearchBar({ query, setQuery }): JSX.Element {
     const [staging, setStaging] = useState('')
-    return <div className="flex items-start px-4 pt-8 gap-4 w-full max-w-screen-xl mx-auto">
+    return <div className="flex items-start px-4 py-8  gap-4 w-full max-w-screen-xl mx-auto">
         <div className="w-52 flex-shrink-0" />
         <form className="flex text-blueGray-600 focus-within:text-gray-900 bg-white rounded-lg group focus-within:ring focus-within:bg-white w-full max-w-screen-md border shadow-lg overflow-hidden"
             onSubmit={e => { e.preventDefault(); setQuery(staging) }} >
@@ -202,9 +157,7 @@ function SearchBar({ query, setQuery }): ReactNode {
                 </button></div>
             <input type="search" results={5} className="px-2 py-2 text-xl w-full focus:outline-none bg-transparent" placeholder="Search" value={staging} onChange={e => setStaging(e.target.value)} />
             <button className="p-2" type="submit">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
+                <HeroIconsOutLine.SearchIcon className="h-6 w-6 text-blue-600" />
             </button>
         </form>
     </div>;

@@ -2,33 +2,40 @@ import React from "react";
 import filesize from 'filesize';
 import * as HeroIconsSolid from '@heroicons/react/solid';
 import useClipboard from "react-use-clipboard";
+import Highlighter from "react-highlight-words";
+
+import { initializeFileTypeIcons, getFileTypeIconAsHTMLString } from '@fluentui/react-file-type-icons';
+
+initializeFileTypeIcons();
 
 import { formatDate } from "./utils/formatDate";
 import { openExternal } from "./App";
 
-export function ResultItem({ result }) {
-
+export function ResultItem({ result, query="" }) {
+	
+	const terms = query.split(/\s+/)
 	const fullName = result.path ? (result.path + '\\' + result.name) : result.name
+
+	const ext = getExt(result.name)
+
+	const FileIcon = () => <div className="h-8 w-8" dangerouslySetInnerHTML={{__html: getFileTypeIconAsHTMLString({extension:ext,imageFileType:'svg'}) || ''}} />;
 
 	const [, copyFullName] = useClipboard(fullName);
 
     return <tr className="hover:bg-blue-50">
         <td className="p-5 pr-2 w-10">
-            <div className="flex items-center justify-center h-8 w-8 rounded-md ring-blue-500 ring-offset-2 ring-offset-gray-100 bg-gradient-to-br to-blue-400 from-cyan-400">
-                <div className="text-xs text-cyan-200">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm3 2h6v4H7V5zm8 8v2h1v-2h-1zm-2-2H7v4h6v-4zm2 0h1V9h-1v2zm1-4V5h-1v2h1zM5 5v2H4V5h1zm0 4H4v2h1V9zm-1 4h1v2H4v-2z" clipRule="evenodd" />
-                    </svg>
-                </div>
+            <div className="flex items-center justify-center h-8 w-8 rounded-md ring-blue-500 ring-offset-2 ring-offset-gray-100 ">
+                <FileIcon />
             </div>
         </td>
         <td className="p-2">
-            <p className="text-gray-900 font-medium truncate">{result.name}</p>
+            <p className="text-gray-900 font-medium truncate">
+				<Highlighter searchWords={terms} textToHighlight={result.name} highlightClassName="bg-yellow-100 rounded" />
+			</p>
+			{/* <div dangerouslySetInnerHTML={{__html: getFileTypeIconAsHTMLString({extension:'docx',imageFileType:'svg'}) || ''}}></div> */}
             <div className="flex gap-1">
                 <div className="flex-shrink-0 text-blue-300 -mt-px w-4 h-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="" viewBox="0 0 20 20" fill="currentColor">
-                        <path d="M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" />
-                    </svg>
+					<HeroIconsSolid.FolderIcon />
                 </div>
                 <p className="text-gray-600 text-sm leading-none">{result.path}</p>
             </div>
@@ -57,4 +64,9 @@ export function ResultItem({ result }) {
             </div>
         </td>
     </tr>;
+}
+
+
+function getExt(filename) {
+    return filename.substr(filename.lastIndexOf('.') + 1).toLowerCase();    
 }

@@ -38,7 +38,7 @@ function App() {
                 <SearchBar query={query} setQuery={setQuery} />
 
                 <div className="flex items-start p-4 gap-4 w-full max-w-screen-xl mx-auto">
-                    <ResultsList results={results} />
+                    <ResultsList results={results} query={query}/>
                 </div>
             </div>
         </div>
@@ -48,7 +48,7 @@ function App() {
 
 export default App;
 
-function ResultsList({ results }) {
+function ResultsList({ results, query='' }) {
     return <div className="flex flex-col flex-grow">
         {/* <pre className="h-40 p-4 text-sm bg-white border shadow rounded overflow-auto mb-4">
             {JSON.stringify(results, null, 2)}
@@ -56,7 +56,7 @@ function ResultsList({ results }) {
         <div className="rounded-md bg-white shadow overflow-x-auto">
             <table className="table-auto w-full">
                 <tbody className="divide-y">
-                    {results.map(result => <ResultItem result={result} />)}
+                    {results.map(result => <ResultItem result={result} query={query} />)}
                 </tbody>
             </table>
         </div>

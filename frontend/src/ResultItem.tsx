@@ -29,8 +29,8 @@ export function ResultItem({ result, query="" }) {
             </div>
         </td>
         <td className="p-2">
-            <p className="text-gray-900 font-medium truncate">
-				<Highlighter searchWords={terms} textToHighlight={result.name} highlightClassName="bg-yellow-100 rounded" />
+            <p className="text-gray-800 font-medium truncate">
+				<Highlighter searchWords={terms} textToHighlight={result.name} highlightClassName="font-bold text-gray-900  bg-white" />
 			</p>
 			{/* <div dangerouslySetInnerHTML={{__html: getFileTypeIconAsHTMLString({extension:'docx',imageFileType:'svg'}) || ''}}></div> */}
             <div className="flex gap-1">

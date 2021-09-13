@@ -17,7 +17,10 @@ ReactDOM.render(
   document.getElementById('root')
 )
 
-function upPath(path) {
+const API = '/api'
+const openExternal = (path: string) => fetch(`${API}/open?path=${path}`)
+
+function upPath(path: string) {
   return path.slice(0, path.lastIndexOf('\\'))
 }
 
@@ -39,7 +42,7 @@ function Roots({ setPath }) {
   })
 }
 
-function useItems(path, initialItems = []) {
+function useItems(path: string, initialItems = []) {
   const [items, setItems] = React.useState(initialItems)
   React.useEffect(() => {
     const url = `/api/browse?path=${path}`
@@ -141,7 +144,7 @@ function BrowseApp() {
             </tbody><thead>
             </thead>
             <tbody className="">
-              {items.map(item => <Item key={item.name} item={item} setLocation={setLocation} />)}
+              {items.map(item => <Item key={item.name} item={item} setLocation={setLocation} openExternal={openExternal} />)}
 
 
 
@@ -181,9 +184,21 @@ interface FileSystemItemData {
 }
 
 
-function Item({ item, setLocation }: { item: FileSystemItemData, setLocation:(x:string) => any }) {
-  const { name, is_folder, modified_time, size_bytes, folder_size_bytes, num_files, num_subfolders } = item
-  return <tr className="text-gray-900 hover:bg-blue-50" onDoubleClick={() => setLocation(item.path + '\\' + item.name)}>
+function Item({ item, setLocation, openExternal }: { item: FileSystemItemData, setLocation:(x:string) => any, openExternal:(x:string) => any }) {
+  const { path, name, is_folder, modified_time, size_bytes, folder_size_bytes, num_files, num_subfolders } = item
+
+  const fullName = path + '\\' + name 
+
+  const onDoubleClick = () => {
+    if (is_folder) {
+      setLocation(fullName)
+    } else {
+      openExternal(fullName)
+    }
+
+  }
+
+  return <tr className="text-gray-900 hover:bg-blue-50" onDoubleClick={onDoubleClick}>
     <td className="text-left px-2 py-0.5 w-full whitespace-nowrap">
       <div className="flex gap-1 items-center">
         <FileIcon ext={is_folder ? "folder" : name} className="w-5 h-5" />

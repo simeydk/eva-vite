@@ -131,20 +131,23 @@ function BrowseApp() {
               <th className="font-normal text-left px-2 py-1 w-40 whitespace-nowrap">
                 Date modified
               </th>
-              <th className="font-normal text-left px-2 py-1 w-40 whitespace-nowrap">
+              {/* <th className="font-normal text-left px-2 py-1 w-40 whitespace-nowrap">
                 Type
-              </th>
+              </th> */}
               <th className="font-normal text-left px-2 py-1 w-40 whitespace-nowrap">
                 Size
               </th>
               <th className="font-normal text-left px-2 py-1 w-40 whitespace-nowrap">
-                Folders / Files
+                Folders
+              </th>
+              <th className="font-normal text-left px-2 py-1 w-40 whitespace-nowrap">
+                Files
               </th>
             </tr>
             </tbody><thead>
             </thead>
             <tbody className="">
-              {items.map(item => <Item key={item.name} item={item} setLocation={setLocation} openExternal={openExternal} />)}
+              {items.map((item: FileSystemItemData) => <Item key={item.name} item={item} setLocation={setLocation} openExternal={openExternal} />)}
 
 
 
@@ -202,20 +205,23 @@ function Item({ item, setLocation, openExternal }: { item: FileSystemItemData, s
     <td className="text-left px-2 py-0.5 w-full whitespace-nowrap">
       <div className="flex gap-1 items-center">
         <FileIcon ext={is_folder ? "folder" : name} className="w-5 h-5" />
-        <span className="truncate w-full">{name}</span>
+        <span className="truncate max-w-xl">{name}</span>
       </div>
     </td>
     <td className="text-left px-2 py-0.5 w-40 whitespace-nowrap text-gray-500">
       {formatDate(new Date(modified_time))}
     </td>
-    <td className="text-left px-2 py-0.5 w-40 whitespace-nowrap text-gray-500">
+    {/* <td className="text-left px-2 py-0.5 w-40 whitespace-nowrap text-gray-500">
       File folder
-    </td>
-    <td className="text-left px-2 py-0.5 w-40 whitespace-nowrap text-gray-500">
+    </td> */}
+    <td className="text-right px-2 py-0.5 w-40 whitespace-nowrap text-gray-500">
       {filesize(size_bytes || folder_size_bytes)}
     </td>
-    <td className="text-left px-2 py-0.5 w-40 whitespace-nowrap text-gray-500">
-      {is_folder ? `${num_subfolders} / ${num_files}` : null}
+    <td className="text-right px-2 py-0.5 w-40 whitespace-nowrap text-gray-500">
+      {is_folder ? `${num_subfolders}` : null}
+    </td>
+    <td className="text-right px-2 py-0.5 w-40 whitespace-nowrap text-gray-500">
+      {is_folder ? `${num_files}` : null}
     </td>
   </tr>;
 }

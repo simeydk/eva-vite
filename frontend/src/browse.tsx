@@ -42,7 +42,7 @@ function Roots({ setPath }) {
   })
 }
 
-function useItems(path: string, initialItems = []) {
+function useItems(path: string, initialItems = []): FileSystemItemData[] {
   const [items, setItems] = React.useState(initialItems)
   React.useEffect(() => {
     const url = `/api/browse?path=${path}`
@@ -59,12 +59,11 @@ function useItems(path: string, initialItems = []) {
 
 function BrowseApp() {
 
-  const [location, setLocation] = React.useState("I:\\OMART\\TEMP",);
+  const [location, setLocation] = React.useState("I:\\OMART",);
   const items = useItems(location)
 
   useEffect(() => {
     const onKeyDown = (e) => {
-      console.log(e)
       if (e.altKey && e.key === "ArrowUp") {
         setLocation(upPath(location))
       }
@@ -72,7 +71,13 @@ function BrowseApp() {
     document.addEventListener("keydown", onKeyDown)
 
     return (() => document.removeEventListener("keydown", onKeyDown))
-  });
+  }, []);
+
+  useEffect(() => {
+    if (items.length === 0) return
+    if (items[0].path === location) return
+    setLocation(items[0].path)
+  },[items])
 
   return (
     <div className="flex flex-col h-screen overflow-hidden bg-gray-100">
@@ -128,19 +133,19 @@ function BrowseApp() {
               <th className="font-normal text-left px-2 py-1 w-full">
                 Name
               </th>
-              <th className="font-normal text-left px-2 py-1 w-40 whitespace-nowrap">
+              <th className="font-normal text-right px-2 py-1 w-40 whitespace-nowrap">
                 Date modified
               </th>
-              {/* <th className="font-normal text-left px-2 py-1 w-40 whitespace-nowrap">
+              {/* <th className="font-normal text-right px-2 py-1 w-40 whitespace-nowrap">
                 Type
               </th> */}
-              <th className="font-normal text-left px-2 py-1 w-40 whitespace-nowrap">
+              <th className="font-normal text-right px-2 py-1 w-40 whitespace-nowrap">
                 Size
               </th>
-              <th className="font-normal text-left px-2 py-1 w-40 whitespace-nowrap">
+              <th className="font-normal text-right px-2 py-1 w-40 whitespace-nowrap">
                 Folders
               </th>
-              <th className="font-normal text-left px-2 py-1 w-40 whitespace-nowrap">
+              <th className="font-normal text-right px-2 py-1 w-40 whitespace-nowrap">
                 Files
               </th>
             </tr>
@@ -201,14 +206,14 @@ function Item({ item, setLocation, openExternal }: { item: FileSystemItemData, s
 
   }
 
-  return <tr className="text-gray-900 hover:bg-blue-50" onDoubleClick={onDoubleClick}>
+  return <tr className="text-gray-900 hover:bg-blue-50 cursor" onDoubleClick={onDoubleClick}>
     <td className="text-left px-2 py-0.5 w-full whitespace-nowrap">
       <div className="flex gap-1 items-center">
         <FileIcon ext={is_folder ? "folder" : name} className="w-5 h-5" />
         <span className="truncate max-w-xl">{name}</span>
       </div>
     </td>
-    <td className="text-left px-2 py-0.5 w-40 whitespace-nowrap text-gray-500">
+    <td className="text-right px-2 py-0.5 w-40 whitespace-nowrap text-gray-500">
       {formatDate(new Date(modified_time))}
     </td>
     {/* <td className="text-left px-2 py-0.5 w-40 whitespace-nowrap text-gray-500">
@@ -218,10 +223,10 @@ function Item({ item, setLocation, openExternal }: { item: FileSystemItemData, s
       {filesize(size_bytes || folder_size_bytes)}
     </td>
     <td className="text-right px-2 py-0.5 w-40 whitespace-nowrap text-gray-500">
-      {is_folder ? `${num_subfolders}` : null}
+      {is_folder ? `${num_subfolders.toLocaleString()}` : null}
     </td>
     <td className="text-right px-2 py-0.5 w-40 whitespace-nowrap text-gray-500">
-      {is_folder ? `${num_files}` : null}
+      {is_folder ? `${num_files.toLocaleString()}` : null}
     </td>
   </tr>;
 }

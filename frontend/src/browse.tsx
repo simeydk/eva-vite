@@ -1,13 +1,11 @@
-import React, { JSXElementConstructor, useEffect } from 'react'
+import React, { JSXElementConstructor, useEffect, useState } from 'react'
 import ReactDOM from 'react-dom'
 
 import cachedFetch from "./utils/cachedFetch";
-import { formatDate } from "./utils/formatDate";
 import { LocationBar } from './LocationBar';
 
 import './index.css'
-import { FileIcon } from './FileIcon';
-import filesize from 'filesize';
+import { Item } from './Item';
 
 
 ReactDOM.render(
@@ -18,7 +16,7 @@ ReactDOM.render(
 )
 
 const API = '/api'
-const openExternal = (path: string) => fetch(`${API}/open?path=${path}`)
+export const openExternal = (path: string) => fetch(`${API}/open?path=${path}`)
 
 function upPath(path: string) {
   return path.slice(0, path.lastIndexOf('\\'))
@@ -42,7 +40,7 @@ function Roots({ setPath }) {
   })
 }
 
-function useItems(path: string, initialItems = []): FileSystemItemData[] {
+export function useItems(path: string, initialItems = []): FileSystemItemData[] {
   const [items, setItems] = React.useState(initialItems)
   React.useEffect(() => {
     const url = `/api/browse?path=${path}`
@@ -175,7 +173,7 @@ function BrowseApp() {
 
 }
 
-interface FileSystemItemData {
+export interface FileSystemItemData {
   accessed_time: string;
   created_time: string;
   folder_size_bytes: number;
@@ -191,45 +189,6 @@ interface FileSystemItemData {
   system: boolean;
 }
 
-
-function Item({ item, setLocation, openExternal }: { item: FileSystemItemData, setLocation:(x:string) => any, openExternal:(x:string) => any }) {
-  const { path, name, is_folder, modified_time, size_bytes, folder_size_bytes, num_files, num_subfolders } = item
-
-  const fullName = path + '\\' + name 
-
-  const onDoubleClick = () => {
-    if (is_folder) {
-      setLocation(fullName)
-    } else {
-      openExternal(fullName)
-    }
-
-  }
-
-  return <tr className="text-gray-900 hover:bg-blue-50 cursor" onDoubleClick={onDoubleClick}>
-    <td className="text-left px-2 py-0.5 w-full whitespace-nowrap">
-      <div className="flex gap-1 items-center">
-        <FileIcon ext={is_folder ? "folder" : name} className="w-5 h-5" />
-        <span className="truncate max-w-xl">{name}</span>
-      </div>
-    </td>
-    <td className="text-right px-2 py-0.5 w-40 whitespace-nowrap text-gray-500">
-      {formatDate(new Date(modified_time))}
-    </td>
-    {/* <td className="text-left px-2 py-0.5 w-40 whitespace-nowrap text-gray-500">
-      File folder
-    </td> */}
-    <td className="text-right px-2 py-0.5 w-40 whitespace-nowrap text-gray-500">
-      {filesize(size_bytes || folder_size_bytes)}
-    </td>
-    <td className="text-right px-2 py-0.5 w-40 whitespace-nowrap text-gray-500">
-      {is_folder ? `${num_subfolders.toLocaleString()}` : null}
-    </td>
-    <td className="text-right px-2 py-0.5 w-40 whitespace-nowrap text-gray-500">
-      {is_folder ? `${num_files.toLocaleString()}` : null}
-    </td>
-  </tr>;
-}
 
 function BottomBar() {
   return <div className="flex-shrink-0 p-2 text-xs flex px-4 gap-8 text-gray-700 border-t">

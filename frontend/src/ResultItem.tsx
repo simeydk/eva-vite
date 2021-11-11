@@ -24,7 +24,7 @@ export function ResultItem({ result, query="" }) {
 
 	const [, copyFullName] = useClipboard(fullName);
 
-    return <tr className={`hover:bg-blue-50 dark:hover:bg-blueGray-600 ${ hidden ? "bg-gray-100 dark:bg-gray-900" : ""} transition`}>
+    return <tr className={` hover:bg-blue-50 dark:hover:bg-blueGray-600 ${ hidden ? "bg-gray-100 dark:bg-gray-900" : ""} transition group`}>
         <td className="p-5 pr-2 w-10">
             <div className="flex items-center justify-center h-8 w-8 rounded-md ring-blue-500 ring-offset-2 ring-offset-gray-100 ">
                 <FileIcon ext={ext} className="w-8 h-8"/>
@@ -32,7 +32,7 @@ export function ResultItem({ result, query="" }) {
         </td>
         <td className="p-2">
             <p className="text-gray-800 font-medium truncate dark:text-blueGray-50 transition">
-				<Highlighter searchWords={terms} textToHighlight={result.name} highlightClassName="font-bold text-gray-900  bg-white dark:bg-blueGray-700 dark:text-cyan-200 transition" />
+				<Highlighter searchWords={terms} textToHighlight={result.name} highlightClassName="font-bold text-gray-900 bg-white dark:bg-blueGray-700 dark:text-cyan-200 transition group-hover:bg-blue-100 dark:group-hover:bg-blueGray-500" highlightStyle={{}}/>
 			</p>
 			{/* <div dangerouslySetInnerHTML={{__html: getFileTypeIconAsHTMLString({extension:'docx',imageFileType:'svg'}) || ''}}></div> */}
             <div className="flex gap-1">

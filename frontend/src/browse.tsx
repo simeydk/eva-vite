@@ -57,7 +57,7 @@ export function useItems(path: string, initialItems = []): FileSystemItemData[] 
 
 function BrowseApp() {
 
-  const [location, setLocation] = React.useState("I:\\OMART",);
+  const [location, setLocation] = React.useState("I:",);
   const items = useItems(location)
 
   useEffect(() => {
@@ -65,17 +65,17 @@ function BrowseApp() {
       if (e.altKey && e.key === "ArrowUp") {
         setLocation(upPath(location))
       }
+      if (e.key === "a") console.log(location)
     }
     document.addEventListener("keydown", onKeyDown)
-
     return (() => document.removeEventListener("keydown", onKeyDown))
-  }, []);
+  }, [location]);
 
   useEffect(() => {
     if (items.length === 0) return
     if (items[0].path === location) return
     setLocation(items[0].path)
-  },[items])
+  }, [items])
 
   return (
     <div className="flex flex-col h-screen overflow-hidden bg-gray-100">
